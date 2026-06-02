@@ -74,6 +74,7 @@ async function POST(req: NextRequest) {
       {
         success: false,
         message: "Something went wrong",
+        error: { error },
       },
       { status: 500 },
     );
