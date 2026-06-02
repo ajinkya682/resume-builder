@@ -1,5 +1,6 @@
 import { IUser } from "@/types/user.types";
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 
 const userSchema = new mongoose.Schema<IUser>(
   {
@@ -30,6 +31,15 @@ const userSchema = new mongoose.Schema<IUser>(
     timestamps: true,
   },
 );
+
+userSchema.pre("save", function (): void {
+  if (!this.isModified("password")) return;
+  this.password = bcrypt.hashSync(this.password, 10);
+});
+
+userSchema.methods.comparePassword = function (password: string): boolean {
+  return bcrypt.compareSync(password, this.password);
+};
 
 const userModel = mongoose.model("User", userSchema);
 
