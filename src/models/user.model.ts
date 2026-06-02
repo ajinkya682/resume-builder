@@ -2,7 +2,11 @@ import { IUser } from "@/types/user.types";
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
-const userSchema = new mongoose.Schema<IUser>(
+interface UserDocument extends Omit<IUser, "_id">, mongoose.Document {
+  comparePassword(password: string): boolean;
+}
+
+const userSchema = new mongoose.Schema<UserDocument>(
   {
     name: {
       type: String,

@@ -42,7 +42,7 @@ async function POST(req: NextRequest) {
       mobile,
     });
 
-    const token = generateToken({ userId: newUser._id });
+    const token = generateToken({ userId: newUser._id.toString() });
 
     const response = NextResponse.json<ApiResponse>(
       {
