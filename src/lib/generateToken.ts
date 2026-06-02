@@ -6,3 +6,7 @@ export const generateToken = (payload: JWTPayLoad): string => {
     expiresIn: "1h",
   });
 };
+
+export const verifyToken = (token: string): any => {
+  return jwt.verify(token, process.env.JWT_SECRET!);
+};
