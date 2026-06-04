@@ -11,7 +11,6 @@ const resumeShema = new mongoose.Schema<IResume>(
     title: {
       type: String,
       default: "",
-      required: true,
     },
     personalInfo: {
       fullname: String,
@@ -26,7 +25,6 @@ const resumeShema = new mongoose.Schema<IResume>(
     summary: {
       type: String,
       default: "",
-      required: true,
     },
     workExperience: {
       type: [

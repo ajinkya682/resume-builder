@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { verifyToken } from "./generateToken";
 
-export async function getCorrentUser() {
+export async function getCurrentUser() {
   const cookieStore = await cookies();
 
   const token = cookieStore.get("token")?.value;
