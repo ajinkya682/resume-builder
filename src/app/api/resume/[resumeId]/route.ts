@@ -2,7 +2,6 @@ import { getCurrentUser } from "@/lib/getCurrentUser";
 import { connectToDB } from "@/lib/mongodb";
 import resumeModel from "@/models/resume.model";
 import { ApiResponse } from "@/types/api.types";
-import { promises } from "dns";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
