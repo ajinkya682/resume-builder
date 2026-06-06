@@ -2,7 +2,7 @@
 
 import React from "react";
 import { IResume } from "@/types/resume.types";
-import { Mail, Phone, MapPin, Github, Linkedin, Globe, ExternalLink } from "lucide-react";
+import { Mail, Phone, MapPin, Linkedin, Globe, ExternalLink } from "lucide-react";
 
 interface ResumeTemplateProps {
   resume: IResume;

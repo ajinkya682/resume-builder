@@ -10,7 +10,7 @@ import { Spinner } from "@/components/ui/Spinner";
 
 export default function PreviewPage() {
   const { resumeId } = useParams<{ resumeId: string }>();
-  const { resume, isLoading } = useResumeContext() as any;
+  const { resume } = useResumeContext();
   const router = useRouter();
 
   return (

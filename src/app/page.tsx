@@ -1,9 +1,9 @@
-import React from "react";
+import { redirect } from "next/navigation";
 
-type Props = {};
-
-const page = (props: Props) => {
-  return <div>This is my Main Page</div>;
-};
-
-export default page;
+/**
+ * Root "/" redirects to /dashboard.
+ * The dashboard layout handles auth guard and redirects to /login if needed.
+ */
+export default function HomePage() {
+  redirect("/dashboard");
+}
