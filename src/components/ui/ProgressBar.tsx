@@ -7,65 +7,72 @@ interface ProgressBarProps {
   label?: string;
   showValue?: boolean;
   color?: "primary" | "success" | "warning" | "error";
-  size?: "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md";
   animated?: boolean;
+  className?: string;
 }
 
-const colorMap = {
-  primary: "bg-[var(--primary)]",
-  success: "bg-[var(--success)]",
-  warning: "bg-[var(--warning)]",
-  error: "bg-[var(--error)]",
-};
-
-const heightMap = {
-  sm: "h-1.5",
-  md: "h-2.5",
-  lg: "h-4",
-};
-
-function getScoreColor(value: number): "error" | "warning" | "success" | "primary" {
+function resolveColor(value: number): "error" | "warning" | "primary" | "success" {
   if (value < 40) return "error";
   if (value < 65) return "warning";
   if (value < 80) return "primary";
   return "success";
 }
 
+const colorMap = {
+  primary: { bar: "bg-[var(--primary)]", glow: "rgba(124,58,237,0.5)", text: "var(--primary-light)" },
+  success: { bar: "bg-[var(--success)]", glow: "rgba(16,185,129,0.5)", text: "var(--success)" },
+  warning: { bar: "bg-[var(--warning)]", glow: "rgba(245,158,11,0.5)", text: "var(--warning)" },
+  error:   { bar: "bg-[var(--error)]",   glow: "rgba(244,63,94,0.5)",  text: "var(--error)"   },
+};
+
+const heightMap = { xs: "h-1", sm: "h-1.5", md: "h-2" };
+
 export function ProgressBar({
   value,
   label,
   showValue = false,
   color,
-  size = "md",
+  size = "sm",
   animated = false,
+  className = "",
 }: ProgressBarProps) {
-  const clampedValue = Math.min(100, Math.max(0, value));
-  const resolvedColor = color ?? getScoreColor(clampedValue);
+  const clamped = Math.min(100, Math.max(0, value));
+  const resolved = color ?? resolveColor(clamped);
+  const { bar, glow, text } = colorMap[resolved];
 
   return (
-    <div className="w-full">
+    <div className={`w-full ${className}`}>
       {(label || showValue) && (
-        <div className="flex justify-between items-center mb-1.5">
-          {label && <span className="text-sm text-[var(--text-secondary)]">{label}</span>}
+        <div className="flex justify-between items-center mb-2">
+          {label && (
+            <span className="text-xs text-[var(--text-secondary)]">{label}</span>
+          )}
           {showValue && (
-            <span className="text-sm font-semibold text-[var(--text-primary)]">
-              {clampedValue}%
+            <span
+              className="text-xs font-bold tabular-nums"
+              style={{ color: text }}
+            >
+              {clamped}%
             </span>
           )}
         </div>
       )}
       <div
-        className={`w-full rounded-full bg-[var(--surface-3)] overflow-hidden ${heightMap[size]}`}
+        className={`w-full ${heightMap[size]} rounded-full bg-[var(--surface-4)] overflow-hidden`}
       >
         <div
           role="progressbar"
-          aria-valuenow={clampedValue}
+          aria-valuenow={clamped}
           aria-valuemin={0}
           aria-valuemax={100}
-          style={{ width: `${clampedValue}%` }}
+          style={{
+            width: `${clamped}%`,
+            boxShadow: clamped > 5 ? `0 0 8px 0 ${glow}` : "none",
+          }}
           className={[
-            "h-full rounded-full transition-all duration-700 ease-out",
-            colorMap[resolvedColor],
+            "h-full rounded-full transition-all duration-700 ease-[var(--ease)]",
+            bar,
             animated ? "animate-pulse" : "",
           ].join(" ")}
         />

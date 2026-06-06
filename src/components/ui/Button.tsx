@@ -3,8 +3,8 @@
 import React from "react";
 import { Loader2 } from "lucide-react";
 
-type Variant = "primary" | "secondary" | "ghost" | "danger" | "outline";
-type Size = "sm" | "md" | "lg";
+type Variant = "primary" | "secondary" | "ghost" | "danger" | "outline" | "subtle";
+type Size = "xs" | "sm" | "md" | "lg";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant;
@@ -16,22 +16,48 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantStyles: Record<Variant, string> = {
-  primary:
-    "bg-[var(--primary)] hover:bg-[var(--primary-dark)] text-white shadow-[var(--shadow-primary)] hover:shadow-[0_6px_24px_rgba(99,102,241,0.4)] border border-[var(--primary-dark)]",
-  secondary:
-    "bg-[var(--surface-2)] hover:bg-[var(--surface-3)] text-[var(--text-primary)] border border-[var(--border)]",
-  ghost:
-    "bg-transparent hover:bg-[var(--surface-2)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-transparent hover:border-[var(--border)]",
-  danger:
-    "bg-[var(--error-bg)] hover:bg-[var(--error)] text-[var(--error)] hover:text-white border border-[var(--error)] hover:border-[var(--error)]",
-  outline:
-    "bg-transparent border border-[var(--primary)] text-[var(--primary)] hover:bg-[var(--primary-glow)]",
+  primary: [
+    "relative overflow-hidden",
+    "bg-[var(--primary)] text-white font-semibold",
+    "border border-[var(--primary-dark)]",
+    "shadow-[0_1px_0_rgba(255,255,255,0.1)_inset,var(--shadow-primary)]",
+    "hover:bg-[var(--primary-dark)]",
+    "hover:shadow-[0_1px_0_rgba(255,255,255,0.1)_inset,var(--shadow-primary-lg)]",
+    "before:absolute before:inset-0 before:bg-gradient-to-b before:from-white/10 before:to-transparent before:pointer-events-none",
+  ].join(" "),
+  secondary: [
+    "bg-[var(--surface-3)] text-[var(--text-primary)] font-medium",
+    "border border-[var(--border-light)]",
+    "shadow-[var(--shadow-xs)]",
+    "hover:bg-[var(--surface-4)] hover:border-[var(--border-strong)]",
+  ].join(" "),
+  ghost: [
+    "bg-transparent text-[var(--text-secondary)] font-medium",
+    "border border-transparent",
+    "hover:bg-[var(--surface-3)] hover:text-[var(--text-primary)] hover:border-[var(--border)]",
+  ].join(" "),
+  subtle: [
+    "bg-[var(--primary-glow)] text-[var(--primary-light)] font-medium",
+    "border border-[var(--primary-border)]",
+    "hover:bg-[rgba(124,58,237,0.25)] hover:border-[var(--primary)]",
+  ].join(" "),
+  danger: [
+    "bg-[var(--error-bg)] text-[var(--error)] font-medium",
+    "border border-[var(--error-border)]",
+    "hover:bg-[var(--error)] hover:text-white hover:border-[var(--error)]",
+  ].join(" "),
+  outline: [
+    "bg-transparent text-[var(--primary-light)] font-medium",
+    "border border-[var(--primary-border)]",
+    "hover:bg-[var(--primary-glow)] hover:border-[var(--primary)]",
+  ].join(" "),
 };
 
 const sizeStyles: Record<Size, string> = {
-  sm: "h-8 px-3 text-xs gap-1.5 rounded-[8px]",
-  md: "h-10 px-4 text-sm gap-2 rounded-[10px]",
-  lg: "h-12 px-6 text-base gap-2.5 rounded-[12px]",
+  xs: "h-7  px-2.5 text-[11px] gap-1   rounded-[var(--r-sm)]",
+  sm: "h-8  px-3   text-xs     gap-1.5 rounded-[var(--r)]",
+  md: "h-9  px-4   text-sm     gap-2   rounded-[var(--r-md)]",
+  lg: "h-11 px-5   text-sm     gap-2.5 rounded-[var(--r-lg)]",
 };
 
 export function Button({
@@ -46,14 +72,21 @@ export function Button({
   className = "",
   ...props
 }: ButtonProps) {
+  const iconSize =
+    size === "xs" ? 12
+    : size === "sm" ? 13
+    : size === "lg" ? 16
+    : 14;
+
   return (
     <button
       disabled={disabled || isLoading}
       className={[
-        "inline-flex items-center justify-center font-medium transition-all duration-200",
-        "focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg)]",
-        "active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none",
-        "cursor-pointer select-none whitespace-nowrap",
+        "inline-flex items-center justify-center",
+        "transition-all duration-[var(--duration)] ease-[var(--ease)]",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg)]",
+        "active:scale-[0.96] disabled:opacity-40 disabled:cursor-not-allowed disabled:pointer-events-none",
+        "cursor-pointer select-none whitespace-nowrap tracking-[-0.01em]",
         variantStyles[variant],
         sizeStyles[size],
         fullWidth ? "w-full" : "",
@@ -62,12 +95,14 @@ export function Button({
       {...props}
     >
       {isLoading ? (
-        <Loader2 size={size === "sm" ? 14 : size === "lg" ? 18 : 16} className="animate-spin shrink-0" />
+        <Loader2 size={iconSize} className="animate-spin shrink-0" />
       ) : (
-        leftIcon && <span className="shrink-0">{leftIcon}</span>
+        leftIcon && <span className="shrink-0 flex items-center">{leftIcon}</span>
       )}
       {children}
-      {!isLoading && rightIcon && <span className="shrink-0">{rightIcon}</span>}
+      {!isLoading && rightIcon && (
+        <span className="shrink-0 flex items-center">{rightIcon}</span>
+      )}
     </button>
   );
 }

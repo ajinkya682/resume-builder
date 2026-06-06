@@ -11,41 +11,49 @@ interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ label, error, hint, id, className = "", ...props }, ref) => {
     const inputId = id ?? label?.toLowerCase().replace(/\s+/g, "-");
+    const hasError = !!error;
+
     return (
       <div className="flex flex-col gap-1.5 w-full">
         {label && (
           <label
             htmlFor={inputId}
-            className="text-sm font-medium text-[var(--text-primary)]"
+            className="text-xs font-semibold tracking-wide text-[var(--text-secondary)] uppercase"
+            style={{ letterSpacing: "0.05em" }}
           >
             {label}
-            {props.required && <span className="text-[var(--error)] ml-1">*</span>}
+            {props.required && (
+              <span className="text-[var(--primary-light)] ml-1 normal-case tracking-normal">*</span>
+            )}
           </label>
         )}
         <textarea
           ref={ref}
           id={inputId}
           className={[
-            "w-full rounded-[10px] px-3 py-2.5 text-sm",
-            "bg-[var(--surface-2)] border border-[var(--border)]",
-            "text-[var(--text-primary)] placeholder:text-[var(--text-muted)]",
-            "transition-all duration-200 resize-y min-h-[100px]",
-            "focus:outline-none focus:border-[var(--primary)] focus:bg-[var(--surface-3)]",
-            "focus:ring-1 focus:ring-[var(--primary)]",
-            error ? "border-[var(--error)] focus:border-[var(--error)]" : "",
+            "w-full rounded-[var(--r-md)] px-3 py-2.5 text-sm",
+            "bg-[var(--surface-2)] text-[var(--text-primary)]",
+            "placeholder:text-[var(--text-disabled)]",
+            "transition-all duration-[var(--duration)] ease-[var(--ease)]",
+            "resize-y min-h-[96px] focus:outline-none",
+            hasError
+              ? "border border-[var(--error-border)] shadow-[0_0_0_3px_var(--error-bg)] focus:border-[var(--error)]"
+              : "border border-[var(--border-light)] focus:border-[var(--primary)] focus:shadow-[0_0_0_3px_var(--primary-glow)]",
             className,
           ].join(" ")}
           {...props}
         />
-        {error && (
-          <p className="text-xs text-[var(--error)] mt-0.5">{error}</p>
+        {hasError && (
+          <p className="text-xs text-[var(--error)] flex items-center gap-1.5">
+            <span className="w-1 h-1 rounded-full bg-[var(--error)] inline-block shrink-0" />
+            {error}
+          </p>
         )}
-        {hint && !error && (
-          <p className="text-xs text-[var(--text-muted)] mt-0.5">{hint}</p>
+        {hint && !hasError && (
+          <p className="text-xs text-[var(--text-muted)]">{hint}</p>
         )}
       </div>
     );
   },
 );
-
 Textarea.displayName = "Textarea";

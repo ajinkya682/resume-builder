@@ -2,7 +2,7 @@
 
 import React from "react";
 import { IResume } from "@/types/resume.types";
-import { Mail, Phone, MapPin, Linkedin, Globe, ExternalLink } from "lucide-react";
+// Note: ResumeTemplate uses unicode characters for print-compatible contact icons
 
 interface ResumeTemplateProps {
   resume: IResume;
