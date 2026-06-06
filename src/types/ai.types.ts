@@ -21,3 +21,11 @@ export interface generateExperienceDescription {
   yearsOfExperience: number;
   techStack: string[];
 }
+
+export interface improveContent {
+  content: string;
+}
+
+export interface resumeText {
+  resumeText: string;
+}
